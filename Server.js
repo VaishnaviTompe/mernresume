@@ -35,12 +35,6 @@ const COHERE_API_KEY = process.env.COHERE_API_KEY;
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 
-app.use(cors());
-app.use(express.json());
-
-app.use(require("./routes/user_route"));
-
-
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true
@@ -52,8 +46,12 @@ mongoose.connect(process.env.MONGODB_URL, {
 //   console.log("DB connected");
 // });
 
+app.use(cors());
+app.use(express.json());
+
+app.use(require("./routes/user_route"));
 // Use the authentication middleware
-app.use(authMiddleware);
+// app.use(authMiddleware);
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 
