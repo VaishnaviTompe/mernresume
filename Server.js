@@ -62,15 +62,14 @@ app.get("/", async (req, res) => {
 
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/submit-resume', upload.single('resume'), async (req, res) => {
+app.post('/submit-resume', authMiddleware, upload.single('resume'), async (req, res) => {
   let filePath;
   try {
     console.log('Request Body:', req.body); // Log request body
     console.log('Request File:', req.file);
-    if (!req.user) {
-      return res.status(401).json({ error: "User not authenticated" });
-    }
-
+    // if (!req.user) {
+    //   return res.status(401).json({ error: "User not authenticated" });
+    // }
 
     if (!req.file) {
       return res.status(400).json({ message: 'No resume file uploaded' });
@@ -162,13 +161,17 @@ async function retrieveAnswerFromResume(userId, question) {
   }
 }
 
-app.post('/ask-question', async (req, res) => {
+app.post('/ask-question', authMiddleware, async (req, res) => {
   try {
     const { question } = req.body;
     console.log('Request Body:', req.body);
 
-    if (!req.user || !question) {
-      return res.status(400).json({ message: 'User ID and Question are required' });
+    // if (!req.user || !question) {
+    //   return res.status(400).json({ message: 'User ID and Question are required' });
+    // }
+
+    if (!question) {
+      return res.status(400).json({ message: 'Question are required' });
     }
 
     const userId = req.user._id;
@@ -195,7 +198,7 @@ app.post('/ask-question', async (req, res) => {
   }
 });
 
-app.get('/shortlist-candidates', async (req, res) => {
+app.get('/shortlist-candidates', authMiddleware, async (req, res) => {
   try {
     // Fetch all users
     const users = await UserModel.find();
